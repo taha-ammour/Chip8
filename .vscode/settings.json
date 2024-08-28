@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "sdl.h": "c"
+        "sdl.h": "c",
+        "chip8_memory.h": "c",
+        "chip8_stack.h": "c",
+        "chip8.h": "c"
     }
 }
