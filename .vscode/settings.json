@@ -3,6 +3,10 @@
         "sdl.h": "c",
         "chip8_memory.h": "c",
         "chip8_stack.h": "c",
-        "chip8.h": "c"
+        "chip8.h": "c",
+        "config.h": "c",
+        "stdlib.h": "c",
+        "memory.h": "c",
+        "corecrt_memory.h": "c"
     }
 }
