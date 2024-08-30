@@ -7,6 +7,10 @@
         "config.h": "c",
         "stdlib.h": "c",
         "memory.h": "c",
-        "corecrt_memory.h": "c"
+        "corecrt_memory.h": "c",
+        "algorithm": "c",
+        "iterator": "c",
+        "xmemory": "c",
+        "xutility": "c"
     }
 }

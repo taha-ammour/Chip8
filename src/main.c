@@ -56,33 +56,39 @@ int WinMain(int argc, char *args[])
                 quit = 1;
                 break;
             case SDL_KEYDOWN:
+            {
+                char key = e.key.keysym.sym;
+                int vkey = Chip8_keyboard_map(keyboard_map, key);
+                if (vkey != -1)
                 {
-                    char key = e.key.keysym.sym;
-                    int vkey = Chip8_keyboard_map(keyboard_map, key);
-                    if (vkey != -1)
-                    {
-                        Chip8_keyboard_down(&chip8.keyboard,vkey);
-                    }
+                    Chip8_keyboard_down(&chip8.keyboard, vkey);
                 }
+            }
             break;
             case SDL_KEYUP:
+            {
+                char key = e.key.keysym.sym;
+                int vkey = Chip8_keyboard_map(keyboard_map, key);
+                if (vkey != -1)
                 {
-                    char key = e.key.keysym.sym;
-                    int vkey = Chip8_keyboard_map(keyboard_map, key);
-                    if (vkey != -1)
-                    {
-                        Chip8_keyboard_up(&chip8.keyboard,vkey);
-                    }
+                    Chip8_keyboard_up(&chip8.keyboard, vkey);
                 }
+            }
             break;
             }
         }
-
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
-        SDL_Rect r = {0, 0, 40, 40};
-        SDL_RenderFillRect(renderer, &r);
+        for (int x = 0; x < CHIP8_WIDTH; x++)
+        {
+            for (int y = 0; y < CHIP8_HEIGHT; y++)
+            {
+
+                SDL_Rect r = {0, 0, 40, 40};
+                SDL_RenderFillRect(renderer, &r);
+            }
+        }
 
         SDL_RenderPresent(renderer);
     }
