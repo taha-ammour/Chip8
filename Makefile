@@ -1,8 +1,8 @@
 CC = gcc
 VCPKG_ROOT = D:/Users/moham/OneDrive/Documents/GitHub/vcpkg
 CFLAGS = -Iinclude -Iinclude1 -I${VCPKG_ROOT}/installed/x64-windows/include
-LDFLAGS = -Llib -L${VCPKG_ROOT}/installed/x64-windows/lib 
-LIBS = -lSDL2 -lm -lopengl32 -lmingw32
+LDFLAGS = -Llib -L${VCPKG_ROOT}/installed/x64-windows/lib -mconsole -Wl,-subsystem,console
+LIBS = -lSDL2 -lm -lopengl32
 
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst %.c,%.o,$(SRC))

@@ -9,6 +9,7 @@ struct Chip8_screen_t
     bool pixels[CHIP8_HEIGHT][CHIP8_WIDTH];
 };
 
+void Chip8_screen_clear(struct Chip8_screen_t *screen);
 void Chip8_screen_set(struct Chip8_screen_t *screen, int x, int y);
 bool Chip8_screen_isSet(struct Chip8_screen_t *screen, int x, int y);
 bool Chip8_screen_draw_sprite(struct Chip8_screen_t *screen, int x, int y, const char * sprite, int num);

@@ -2,19 +2,84 @@
 #include <stdio.h>
 #include "Chip8.h"
 
+#ifdef _WIN32
+#include <windows.h>
+
+
+int main(int argc, char *argv[]);
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    
+    int argc;
+    LPWSTR* argv_wide = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+    
+    char** argv = (char**)malloc(argc * sizeof(char*));
+    for (int i = 0; i < argc; i++) {
+        int size_needed = WideCharToMultiByte(CP_UTF8, 0, argv_wide[i], -1, NULL, 0, NULL, NULL);
+        argv[i] = (char*)malloc(size_needed);
+        WideCharToMultiByte(CP_UTF8, 0, argv_wide[i], -1, argv[i], size_needed, NULL, NULL);
+    }
+
+    
+    int result = main(argc, argv);
+
+    
+    for (int i = 0; i < argc; i++) {
+        free(argv[i]);
+    }
+    free(argv);
+    LocalFree(argv_wide);
+
+    
+    return result;
+}
+#endif
+
 const char keyboard_map[CHIP8_TOTAL_KEYS] = {
     SDLK_0, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5,
     SDLK_6, SDLK_7, SDLK_8, SDLK_9, SDLK_a, SDLK_b,
     SDLK_c, SDLK_d, SDLK_e, SDLK_f};
 
-int WinMain(int argc, char *args[])
+int main(int argc, char *argv[])
 {
+    
+    if (argc < 2)
+    {
+        printf("you must provide a file as a 2 arg !!!\n");
+        return -1;
+    }
+    
+    const char* filename = argv[1];
+    printf("the file working on is: %s\n", filename);
+
+    FILE* f = fopen(filename, "rb");
+    if(!f)
+    {
+        printf("Unable to open file %s\n", filename);
+        return -1;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f,0, SEEK_SET);
+
+    char* buffer = (char*)malloc(size * sizeof(char));
+    int res = fread(buffer, size, 1, f);
+    
+    if (res != 1)
+    {
+        printf("Failed to read from file \n");
+        return -1;
+    }
 
     struct Chip8_t chip8;
     Chip8_init(&chip8);
+    Chip8_load(&chip8, buffer, size);
 
-    Chip8_screen_draw_sprite(&chip8.screen,0,0,&chip8.memory.memory[0x00],5);
-
+    free(buffer);
+    fclose(f);
+    
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
     {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -96,6 +161,22 @@ int WinMain(int argc, char *args[])
         }
 
         SDL_RenderPresent(renderer);
+
+        if (chip8.registers.DT > 0)
+        {
+            SDL_Delay(100);
+            chip8.registers.DT--;
+        }
+
+        if (chip8.registers.ST > 0)
+        {
+            _beep(13000,100 * chip8.registers.ST);
+            chip8.registers.ST = 0;
+        }
+        
+        unsigned short opcode = Chip8_memory_get_short(&chip8.memory, chip8.registers.PC);
+        Chip8_exec(&chip8, opcode);
+        chip8.registers.PC += 2;
     }
 
     SDL_DestroyRenderer(renderer);

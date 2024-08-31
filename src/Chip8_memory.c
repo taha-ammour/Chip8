@@ -14,3 +14,8 @@ unsigned char Chip8_memory_get(struct Chip8_memory_t* memory,int index)
     Chip8_isMemory_in_Bounds(index);
     return memory->memory[index];
 }
+unsigned short Chip8_memory_get_short(struct Chip8_memory_t* memory,int index){
+    unsigned char byte1 = Chip8_memory_get(memory, index);
+    unsigned char byte2 = Chip8_memory_get(memory, index + 1);
+    return (byte1 << 8) | byte2;
+}
