@@ -11,4 +11,6 @@ struct Chip8_screen_t
 
 void Chip8_screen_set(struct Chip8_screen_t *screen, int x, int y);
 bool Chip8_screen_isSet(struct Chip8_screen_t *screen, int x, int y);
+bool Chip8_screen_draw_sprite(struct Chip8_screen_t *screen, int x, int y, const char * sprite, int num);
+
 #endif

@@ -13,6 +13,8 @@ int WinMain(int argc, char *args[])
     struct Chip8_t chip8;
     Chip8_init(&chip8);
 
+    Chip8_screen_draw_sprite(&chip8.screen,0,0,&chip8.memory.memory[0x00],5);
+
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
     {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -84,9 +86,12 @@ int WinMain(int argc, char *args[])
         {
             for (int y = 0; y < CHIP8_HEIGHT; y++)
             {
-
-                SDL_Rect r = {0, 0, 40, 40};
-                SDL_RenderFillRect(renderer, &r);
+                if (Chip8_screen_isSet(&chip8.screen,x,y))
+                {
+                    SDL_Rect r = {x * CHIP8_WINDOW_MULTIPLIER, y * CHIP8_WINDOW_MULTIPLIER, CHIP8_WINDOW_MULTIPLIER, CHIP8_WINDOW_MULTIPLIER};
+                    SDL_RenderFillRect(renderer, &r);
+                }
+                
             }
         }
 

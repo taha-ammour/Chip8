@@ -11,6 +11,9 @@
         "algorithm": "c",
         "iterator": "c",
         "xmemory": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "stdio.h": "c",
+        "cmath": "c",
+        "cstdlib": "c"
     }
 }
