@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
     struct Chip8_t chip8;
     Chip8_init(&chip8);
     Chip8_load(&chip8, buffer, size);
+    Chip8_keyboard_set_map(&chip8.keyboard, keyboard_map);
 
     free(buffer);
     fclose(f);
@@ -125,7 +126,7 @@ int main(int argc, char *argv[])
             case SDL_KEYDOWN:
             {
                 char key = e.key.keysym.sym;
-                int vkey = Chip8_keyboard_map(keyboard_map, key);
+                int vkey = Chip8_keyboard_map(&chip8.keyboard, key);
                 if (vkey != -1)
                 {
                     Chip8_keyboard_down(&chip8.keyboard, vkey);
@@ -135,7 +136,7 @@ int main(int argc, char *argv[])
             case SDL_KEYUP:
             {
                 char key = e.key.keysym.sym;
-                int vkey = Chip8_keyboard_map(keyboard_map, key);
+                int vkey = Chip8_keyboard_map(&chip8.keyboard, key);
                 if (vkey != -1)
                 {
                     Chip8_keyboard_up(&chip8.keyboard, vkey);
@@ -164,19 +165,19 @@ int main(int argc, char *argv[])
 
         if (chip8.registers.DT > 0)
         {
-            SDL_Delay(100);
+            SDL_Delay(10);
             chip8.registers.DT--;
         }
 
         if (chip8.registers.ST > 0)
         {
-            _beep(13000,100 * chip8.registers.ST);
+            _beep(13000,10 * chip8.registers.ST);
             chip8.registers.ST = 0;
         }
         
         unsigned short opcode = Chip8_memory_get_short(&chip8.memory, chip8.registers.PC);
-        Chip8_exec(&chip8, opcode);
         chip8.registers.PC += 2;
+        Chip8_exec(&chip8, opcode);
     }
 
     SDL_DestroyRenderer(renderer);

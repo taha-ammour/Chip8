@@ -6,11 +6,16 @@ static void Chip8_keyboard_ensure_in_Bounds(int key)
     assert(key >= 0 && key < CHIP8_TOTAL_KEYS);
 }
 
-int Chip8_keyboard_map(const char *map, char key)
+void Chip8_keyboard_set_map(struct Chip8_keyboard_t* keyboard, const char* map)
+{
+    keyboard->keyboard_map = map;
+}
+
+int Chip8_keyboard_map(struct Chip8_keyboard_t* keyboard, char key)
 {
     for (int i = 0; i < CHIP8_TOTAL_KEYS; i++)
     {
-        if (map[i] == key)
+        if (keyboard->keyboard_map[i] == key)
         {
             return i;
         }
